@@ -72,7 +72,22 @@ public class MainFragment extends Fragment {
 
                 Log.d(tag, "calendar ==> " + calendar.getTime());
 
-                sentValueToReceiver(calendar);
+//                sentValueToReceiver(calendar);
+
+                MyManage myManage = new MyManage(getActivity());
+                myManage.addValueToSQLite(calendar.getTime().toString(),
+                        Integer.toString(dayInt[0]),
+                        Integer.toString(monthInt[0]),
+                        Integer.toString(hourInt),
+                        Integer.toString(minusInt));
+
+//                Replace Fragment
+                getActivity().getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.contentMainFragment, new ShowListFragment())
+                        .addToBackStack(null)
+                        .commit();
+
 
 
             }
