@@ -35,13 +35,28 @@ public class ListAlarmAdapter extends RecyclerView.Adapter<ListAlarmAdapter.List
     @Override
     public ListAlarmViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
+        View view = layoutInflater.inflate(R.layout.layout_list_alarm, viewGroup, false);
+        ListAlarmViewHolder listAlarmViewHolder = new ListAlarmViewHolder(view);
 
-
-        return null;
+        return listAlarmViewHolder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ListAlarmViewHolder listAlarmViewHolder, int i) {
+
+        String notiString = notiStringArrayList.get(i);
+        String dayString = dayStringArrayList.get(i);
+        String monthString = monthStringArrayList.get(i);
+        String hourtring = hourStringArrayList.get(i);
+        String minusString = minusStringArrayList.get(i);
+
+        listAlarmViewHolder.notiTextView.setText(notiString);
+        listAlarmViewHolder.dayTextView.setText("Day = " + dayString);
+        String realMonthString = Integer.toString(Integer.parseInt(monthString) + 1);
+        listAlarmViewHolder.monthTextView.setText("Month = " + realMonthString);
+        listAlarmViewHolder.hourTextView.setText("HH = " + hourtring);
+        listAlarmViewHolder.minusTextView.setText("Min = " + minusString);
+
 
     }
 
