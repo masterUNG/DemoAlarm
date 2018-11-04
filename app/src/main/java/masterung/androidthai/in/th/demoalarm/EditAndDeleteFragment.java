@@ -1,6 +1,7 @@
 package masterung.androidthai.in.th.demoalarm;
 
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -10,6 +11,9 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -55,6 +59,89 @@ public class EditAndDeleteFragment extends Fragment {
         showData();
 
     }   // Main Method
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == R.id.itemEdit) {
+            editValueSQLite();
+            return true;
+        }
+        if (item.getItemId() == R.id.itemDelete) {
+            deleteValueSQLite();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void deleteValueSQLite() {
+
+        try {
+
+            SQLiteDatabase sqLiteDatabase = getActivity().openOrCreateDatabase(MyOpenHelper.DATABASE_NAME,
+                    Context.MODE_PRIVATE, null);
+            sqLiteDatabase.delete("alarmTABLE", "id=" + idString, null);
+
+            back();
+        } catch (Exception e) {
+            Log.d(tag, "e delete ==> " + e.toString());
+        }
+
+
+    }
+
+    private void editValueSQLite() {
+
+        String notiString = notiEditText.getText().toString().trim();
+        String dayString = dayEditText.getText().toString().trim();
+        String monthString = monthEditText.getText().toString().trim();
+        String hourString = hourEditText.getText().toString().trim();
+        String minusString = minusEditText.getText().toString().trim();
+
+        try {
+
+            SQLiteDatabase sqLiteDatabase = getActivity().openOrCreateDatabase(MyOpenHelper.DATABASE_NAME,
+                    Context.MODE_PRIVATE, null);
+
+//            Edit by SQL Command
+//            sqLiteDatabase.execSQL("UPDATE alarmTABLE SET NotiTime = " + "'" + notiString + "'," +
+//                    " Day = " + "'" + dayString + "'," +
+//                    " Month = " + "'" + monthString + "'," +
+//                    " Hour = " + "'" + hourString + "'," +
+//                    " Minus = " + "'" + minusString + "'" +
+//                    " WHERE id = " + "'" + idString + "'");
+
+//            Edit by ContentValue
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("NotiTime", notiString);
+            contentValues.put("Day", dayString);
+            contentValues.put("Month", monthString);
+            contentValues.put("Hour", hourString);
+            contentValues.put("Minus", minusString);
+            sqLiteDatabase.update("alarmTABLE", contentValues, "id=" + idString, null);
+
+            back();
+
+
+        } catch (Exception e) {
+            Log.d(tag, "e editValue ==> " + e.toString());
+        }
+
+
+    }
+
+    private void back() {
+        getActivity().getSupportFragmentManager().popBackStack();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        inflater.inflate(R.menu.menu_edit, menu);
+
+    }
 
     private void showData() {
 
@@ -104,9 +191,11 @@ public class EditAndDeleteFragment extends Fragment {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().getSupportFragmentManager().popBackStack();
+                back();
             }
         });
+
+        setHasOptionsMenu(true);
 
     }
 

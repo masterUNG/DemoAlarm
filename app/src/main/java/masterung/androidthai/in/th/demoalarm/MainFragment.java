@@ -5,6 +5,8 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -20,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CalendarView;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
 
@@ -54,7 +57,54 @@ public class MainFragment extends Fragment {
 //        Toolbar Controller
         toolbarController();
 
+//        Check Alarm
+        checkAlarm();
+
     }   // Method Main
+
+    private void checkAlarm() {
+
+        try {
+
+            SQLiteDatabase sqLiteDatabase = getActivity().openOrCreateDatabase(
+                    MyOpenHelper.DATABASE_NAME, Context.MODE_PRIVATE, null
+            );
+
+            Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM alarmTABLE", null);
+
+
+            if (cursor.moveToFirst()) {
+
+                for (int i = 0; i < cursor.getCount(); i++) {
+
+                    String idString = cursor.getString(0);
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.set(Calendar.DAY_OF_MONTH, Integer.parseInt(cursor.getString(2)));
+                    calendar.set(Calendar.MONTH, 10);
+                    calendar.set(Calendar.HOUR_OF_DAY, 3);
+                    calendar.set(Calendar.MINUTE, Integer.parseInt(cursor.getString(5)));
+                    calendar.set(Calendar.YEAR, 2018);
+                    calendar.set(Calendar.SECOND, 0);
+
+                    Log.d("4NovV3", "notiCalendar[" + i + "] ==> " + calendar.getTime().toString());
+
+                    sentValueToReceiver(calendar, idString);
+
+                    cursor.moveToNext();
+
+                }   // for
+
+            } else {
+                Log.d("4NovV3", "Empty Data");
+            }
+
+
+        } catch (Exception e) {
+            Log.d("4NovV3", "e checkAlarm ==> " + e.toString());
+        }
+
+
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -133,7 +183,7 @@ public class MainFragment extends Fragment {
                 .commit();
     }
 
-    private void sentValueToReceiver(Calendar notiCalendar) {
+    private void sentValueToReceiver(Calendar notiCalendar, String idString) {
 
         Random random = new Random();
         int requestInt = random.nextInt(100);
