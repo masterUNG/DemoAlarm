@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,8 +35,27 @@ public class ShowListFragment extends Fragment {
 //        Create RecyclerView
         createRecyclerView();
 
+//        Create Toolbar
+        createToolbar();
 
     }   // Main Method
+
+    private void createToolbar() {
+        Toolbar toolbar = getView().findViewById(R.id.toolbarListAlarm);
+        ((MainActivity) getActivity()).setSupportActionBar(toolbar);
+        ((MainActivity) getActivity()).getSupportActionBar().setTitle("Show All Alarm");
+
+        ((MainActivity) getActivity()).getSupportActionBar().setHomeButtonEnabled(true);
+        ((MainActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
+
+    }
 
     private void createRecyclerView() {
 
@@ -61,10 +81,12 @@ public class ShowListFragment extends Fragment {
             ArrayList<String> monthStringArrayList = new ArrayList<>();
             ArrayList<String> hourStringArrayList = new ArrayList<>();
             ArrayList<String> minusStringArrayList = new ArrayList<>();
+            final ArrayList<String> idStringArrayList = new ArrayList<>();
 
 
             for (int i = 0; i < cursor.getCount(); i += 1) {
 
+                idStringArrayList.add(cursor.getString(0));
                 notiStringArrayList.add(cursor.getString(1));
                 dayStringArrayList.add(cursor.getString(2));
                 monthStringArrayList.add(cursor.getString(3));
@@ -86,10 +108,25 @@ public class ShowListFragment extends Fragment {
 //            Call RecyclerView Adapter
             ListAlarmAdapter listAlarmAdapter = new ListAlarmAdapter(getActivity(),
                     notiStringArrayList, dayStringArrayList, monthStringArrayList,
-                    hourStringArrayList, minusStringArrayList);
+                    hourStringArrayList, minusStringArrayList, new OnClickListItem() {
+                @Override
+                public void onClickListItem(View view, int position) {
+                    Log.d("4NovV2", "id Sent ==> " + idStringArrayList.get(position));
+
+//                    Replace Fragment and put Value
+                    getActivity().getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.contentMainFragment,
+                                    EditAndDeleteFragment.editAndDeleteInstante(idStringArrayList.get(position)))
+                            .addToBackStack(null)
+                            .commit();
+
+
+                }
+            });
             recyclerView.setAdapter(listAlarmAdapter);
 
-
+        cursor.close();
         } catch (Exception e) {
             Log.d("4NovV1", "e ==> " + e.toString());
         }

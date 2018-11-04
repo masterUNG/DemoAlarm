@@ -16,20 +16,23 @@ public class ListAlarmAdapter extends RecyclerView.Adapter<ListAlarmAdapter.List
     private ArrayList<String> notiStringArrayList, dayStringArrayList,
             monthStringArrayList, hourStringArrayList, minusStringArrayList;
     private LayoutInflater layoutInflater;
+    private OnClickListItem onClickListItem;
 
     public ListAlarmAdapter(Context context,
                             ArrayList<String> notiStringArrayList,
                             ArrayList<String> dayStringArrayList,
                             ArrayList<String> monthStringArrayList,
                             ArrayList<String> hourStringArrayList,
-                            ArrayList<String> minusStringArrayList) {
+                            ArrayList<String> minusStringArrayList,
+                            OnClickListItem onClickListItem) {
         this.layoutInflater = LayoutInflater.from(context);
         this.notiStringArrayList = notiStringArrayList;
         this.dayStringArrayList = dayStringArrayList;
         this.monthStringArrayList = monthStringArrayList;
         this.hourStringArrayList = hourStringArrayList;
         this.minusStringArrayList = minusStringArrayList;
-    }   // Constructor
+        this.onClickListItem = onClickListItem;
+    }
 
     @NonNull
     @Override
@@ -42,7 +45,7 @@ public class ListAlarmAdapter extends RecyclerView.Adapter<ListAlarmAdapter.List
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ListAlarmViewHolder listAlarmViewHolder, int i) {
+    public void onBindViewHolder(@NonNull final ListAlarmViewHolder listAlarmViewHolder, int i) {
 
         String notiString = notiStringArrayList.get(i);
         String dayString = dayStringArrayList.get(i);
@@ -57,8 +60,16 @@ public class ListAlarmAdapter extends RecyclerView.Adapter<ListAlarmAdapter.List
         listAlarmViewHolder.hourTextView.setText("HH = " + hourtring);
         listAlarmViewHolder.minusTextView.setText("Min = " + minusString);
 
+//        Add After Create OnClickListItem
+        listAlarmViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickListItem.onClickListItem(v, listAlarmViewHolder.getAdapterPosition());
+            }
+        });
 
-    }
+
+    }   // onBind
 
     @Override
     public int getItemCount() {

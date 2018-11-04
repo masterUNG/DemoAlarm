@@ -5,18 +5,30 @@
     android:layout_height="match_parent"
     tools:context=".MainFragment">
 
-    <CalendarView
-        android:id="@+id/calendarViewSet"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"
+        android:layout_above="@id/buttonSet"
+        android:orientation="vertical">
+
+        <!--Toolbar-->
+        <include
+            android:id="@+id/toolbarMain"
+            layout="@layout/toolbar_main" />
+
+        <CalendarView
+            android:id="@+id/calendarViewSet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
 
     <Button
-        android:text="Set"
         android:id="@+id/buttonSet"
-        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="Set" />
 
 
 </RelativeLayout>
