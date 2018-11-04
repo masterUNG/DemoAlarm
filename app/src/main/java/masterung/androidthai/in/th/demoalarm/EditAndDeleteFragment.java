@@ -76,8 +76,15 @@ public class EditAndDeleteFragment extends Fragment {
             for (int i = 0; i < strings.length; i++) {
 
                 strings[i] = cursor.getString(i);
+                Log.d(tag, "strings[" + i + "] ==> " + strings[i]);
 
-            }
+            }   // for
+
+            notiEditText.setText(strings[1]);
+            dayEditText.setText(strings[2]);
+            monthEditText.setText(strings[3]);
+            hourEditText.setText(strings[4]);
+            minusEditText.setText(strings[5]);
 
 
         } catch (Exception e) {
