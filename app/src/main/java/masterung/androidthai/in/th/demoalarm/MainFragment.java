@@ -65,16 +65,11 @@ public class MainFragment extends Fragment {
     private void checkAlarm() {
 
         try {
-
             SQLiteDatabase sqLiteDatabase = getActivity().openOrCreateDatabase(
                     MyOpenHelper.DATABASE_NAME, Context.MODE_PRIVATE, null
             );
-
             Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM alarmTABLE", null);
-
-
             if (cursor.moveToFirst()) {
-
                 for (int i = 0; i < cursor.getCount(); i++) {
 
                     String idString = cursor.getString(0);
@@ -85,25 +80,16 @@ public class MainFragment extends Fragment {
                     calendar.set(Calendar.MINUTE, Integer.parseInt(cursor.getString(5)));
                     calendar.set(Calendar.YEAR, 2018);
                     calendar.set(Calendar.SECOND, 0);
-
                     Log.d("4NovV3", "notiCalendar[" + i + "] ==> " + calendar.getTime().toString());
-
                     sentValueToReceiver(calendar, idString);
-
                     cursor.moveToNext();
-
                 }   // for
-
             } else {
                 Log.d("4NovV3", "Empty Data");
             }
-
-
         } catch (Exception e) {
             Log.d("4NovV3", "e checkAlarm ==> " + e.toString());
         }
-
-
     }
 
     @Override
