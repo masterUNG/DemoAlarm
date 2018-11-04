@@ -189,6 +189,7 @@ public class MainFragment extends Fragment {
         int requestInt = random.nextInt(100);
 
         Intent intent = new Intent(getActivity(), MyReceiver.class);
+        intent.putExtra("Message", notiCalendar.getTime().toString());
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getActivity(),
                 requestInt, intent, 0);
 
